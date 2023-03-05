@@ -14,6 +14,6 @@ async def on_ready():
             message=spider.news_to_str(item)
             print(message)
             await client.get_channel(config['channel_id']).send(message)
-        await asyncio.sleep(60*60*12)
+        await asyncio.sleep(60*60)
 
 client.run(config['token'])
