@@ -1,5 +1,5 @@
 # tnfsh news discord bot
-forwarding new to discord channel
+forwarding news to discord channel
 
 source: https://www.tnfsh.tn.edu.tw/latestevent/index.aspx?Parser=9,3,19
 
@@ -13,4 +13,4 @@ with open('config.pkl','wb') as file:
     'channel_id': channel_id_int
    },file)
 ```
-or change the code
+or just edit the code
