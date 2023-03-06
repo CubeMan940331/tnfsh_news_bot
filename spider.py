@@ -49,11 +49,11 @@ def news_to_str(news:dict):
 
 import time
 def main():
-    for _ in range(5):
+    while True:
         tmp=get_tnfsh_new()
         if len(tmp)==0: print('no news QQ')
         for item in tmp:
             print(item)
-        time.sleep(5)
+        time.sleep(60)
 
 if __name__=='__main__': main()
