@@ -4,13 +4,10 @@ import datetime
 def get_tnfsh_news_raw()->list:
     print(f'[{datetime.datetime.now()}] send request to source')
     url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,19'
-    try:
-        web_page_text=requests.get(url).text
-        web_page_dom=bs4.BeautifulSoup(web_page_text,'html.parser')
-        result=web_page_dom.find_all('ul')[18].find_all('li')
-    except:
-        print('cannot ceonnect to source')
-        return []
+    web_page_text=requests.get(url).text
+    web_page_dom=bs4.BeautifulSoup(web_page_text,'html.parser')
+    result=web_page_dom.find_all('ul')[18].find_all('li')
+
     p=[]
     for item in result[1:]:
         link=item.find('a').get('href')
@@ -30,7 +27,6 @@ def get_tnfsh_new()->list:
         with open('news_deque.pkl','rb') as file:
             news_deque=pickle.load(file)
     except: news_deque=deque()
-    
     raw_list=get_tnfsh_news_raw()
     now_date=datetime.date.today()
     while True:
@@ -55,10 +51,15 @@ def news_to_str(news:dict):
 import time
 def main():
     while True:
-        tmp=get_tnfsh_new()
-        if len(tmp)==0: print('no news QQ')
-        for item in tmp:
-            print(item)
-        time.sleep(60)
+        try:
+            tmp=get_tnfsh_new()
+        except:
+            print('cannot connect to source')
+            tmp=[]
+        else:
+            if len(tmp)==0: print('no news detected')
+            for item in tmp: print(item)
+        finally: del tmp
+        time.sleep(5)
 
 if __name__=='__main__': main()
