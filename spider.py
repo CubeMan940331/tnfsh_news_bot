@@ -2,10 +2,15 @@ import requests
 import bs4
 import datetime
 def get_tnfsh_news_raw()->list:
+    print(f'[{datetime.datetime.now()}] send request to source')
     url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,19'
-    web_page_text=requests.get(url).text
-    web_page_dom=bs4.BeautifulSoup(web_page_text,'html.parser')
-    result=web_page_dom.find_all('ul')[18].find_all('li')
+    try:
+        web_page_text=requests.get(url).text
+        web_page_dom=bs4.BeautifulSoup(web_page_text,'html.parser')
+        result=web_page_dom.find_all('ul')[18].find_all('li')
+    except:
+        print('cannot ceonnect to source')
+        return []
     p=[]
     for item in result[1:]:
         link=item.find('a').get('href')
