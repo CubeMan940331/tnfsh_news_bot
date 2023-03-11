@@ -29,23 +29,25 @@ async def get_tnfsh_news()->list:
     '''
     return a list of news that haven't been forwarded
     '''
+    #read saved news_deque
     try:
         with open('news_deque.pkl','rb') as file:
             news_deque=pickle.load(file)
     except: news_deque=deque()
+    #================
     raw_list=await tnfsh_news_crawler()
     if len(news_deque)>100: news_deque=news_deque[-100:]
-    idx=len(news_deque)
-    for i in range(len(news_deque)-1,-1,-1):
-        if news_deque[i]['link']==raw_list[0]['link']:
-            idx=i
+    #================
+    idx=0
+    for i in range(len(raw_list)-1,-1,-1):
+        if news_deque[-1]['link']==raw_list[i]['link']:
+            idx=i+1
             break
-    idx=len(news_deque)-idx
     news_deque.extend(raw_list[idx:])
-
+    #save news_deque
     with open('news_deque.pkl','wb') as file:
         pickle.dump(news_deque,file)
-
+    #================
     return raw_list[idx:]
 
 def news_to_str(news:dict)->str:
@@ -57,12 +59,13 @@ def news_to_str(news:dict)->str:
 
 #this section of code is for test
 async def main():
-    try:
-        tmp=await get_tnfsh_news()
-    except:
-        print('cannot connect to source')
+    try: tmp=await get_tnfsh_news()
+    except: print('connot connect to source')
     else:
         if len(tmp)==0: print('no news detected')
         for item in tmp: print(item)
 
-if __name__=='__main__': asyncio.run(main())
+if __name__=='__main__':
+    loop=asyncio.get_event_loop()
+    loop.run_until_complete(main())
+
