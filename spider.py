@@ -7,13 +7,13 @@ async def tnfsh_news_crawler()->list:
     news is represented as {'title' : `str`, 'date' : `datetime.date`, 'link' : `str`}
     '''
     print(f'[{datetime.datetime.now()}] send request to source')
-    #url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,19'
-    url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,16'
+    url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,19'
+    #url='https://www.tnfsh.tn.edu.tw/latestevent/Index.aspx?Parser=9,3,16'
     response=await httpx.AsyncClient().get(url)
     web_page_text=response.text
     web_page_dom=bs4.BeautifulSoup(web_page_text,'html.parser')
     result=web_page_dom.find_all('ul')[18].find_all('li')
-    p=deque([])
+    p=deque()
     for item in result[1:]:
         link=item.find('a').get('href')
         title=item.find('a').get('title')
